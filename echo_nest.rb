@@ -13,7 +13,7 @@ class EchoNest
     @base_url = "http://developer.echonest.com/api/v4"
   end
 
-  def find_songs(opts={})
+  def find_songs(opts = {})
     # Returns a list of song hashes for the artist specified. If the connection fails
     # an error message is printed.
     #
@@ -73,6 +73,7 @@ class EchoNest
 
   def build_url(query, opts={})
     handle_opts(opts)
+    (opts[:artist] = opts[:artist].gsub!(" ", "\+") || opts[:artist]) if opts[:artist]
     url = "#{base_url}" << query
     opts.each do |k,v|
       url << "&#{k}=#{v}"
@@ -81,9 +82,8 @@ class EchoNest
   end
 
   def handle_opts(opts)
-    (opts[:artist] = opts[:artist].gsub!(" ", "\+") || opts[:artist]) if opts[:artist]
     raise ArgumentError, "bucket must be (audio_summary | artist_familiarity | artist_hotttnesss | artist_location | song_hotttnesss | song_type | tracks | id:rosetta-catalog | id:Personal-Catalog-ID)" if (opts[:bucket] && !VALID_BUCKETS.include?(opts[:bucket]))
-    raise ArgumentError, "sort must be ( tempo-asc | duration-asc | loudness-asc | artist_familiarity-asc | artist_hotttnesss-asc | artist_start_year-asc | artist_start_year-desc | artist_end_year-asc | artist_end_year-desc | song_hotttness-asc | latitude-asc | longitude-asc | mode-asc | key-asc | tempo-desc | duration-desc | loudness-desc | artist_familiarity-desc | artist_hotttnesss-desc | song_hotttnesss-desc | latitude-desc | longitude-desc | mode-desc | key-desc | energy-asc | energy-desc | danceability-asc | danceability-desc )" if (opts[:sort] && !VALID_SORTS.include(opts[:sort]))
+    raise ArgumentError, "sort must be ( tempo-asc | duration-asc | loudness-asc | artist_familiarity-asc | artist_hotttnesss-asc | artist_start_year-asc | artist_start_year-desc | artist_end_year-asc | artist_end_year-desc | song_hotttness-asc | latitude-asc | longitude-asc | mode-asc | key-asc | tempo-desc | duration-desc | loudness-desc | artist_familiarity-desc | artist_hotttnesss-desc | song_hotttnesss-desc | latitude-desc | longitude-desc | mode-desc | key-desc | energy-asc | energy-desc | danceability-asc | danceability-desc )" if (opts[:sort] && !VALID_SORTS.include?(opts[:sort]))
   end
 
   def api_string
