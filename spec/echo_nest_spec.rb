@@ -1,23 +1,21 @@
-require File.join(File.dirname(__FILE__), '..', 'echo_nest')
+require File.join(File.dirname(__FILE__), '..', 'song')
 
-describe EchoNest do
+describe EchoNest::Song do
   API_KEY = "ABCDEFGHIJKL"
-  CONSUMER_KEY = "ABCDEFGHIJKL"
-  SECRET = "ABCDEFGHIJKL"
 
   context "instance" do
-    let(:echo) { EchoNest.new }
+    let(:echo) { EchoNest::Song.new }
     context "public" do
-      context "find_songs" do
+      context "search" do
         it "should search for songs" do
           echo.should_receive(:build_url).with("/song/search?", {})
-          echo.find_songs
+          echo.search
         end
       end
-      context "get_song_profile" do
+      context "profile" do
         it "should request song profile" do
           echo.should_receive(:build_url).with("/song/profile?", :id => 'id')
-          echo.get_song_profile('id')
+          echo.profile(:id => 'id')
         end
       end
     end
@@ -32,11 +30,11 @@ describe EchoNest do
       end
       context "handle_opts" do
         it "should accept good options" do
-          lambda { echo.send(:handle_opts, :bucket => "song_type") }.should_not raise_error(ArgumentError)
+          lambda { echo.send(:handle_opts, :bucket => ["song_type"]) }.should_not raise_error(ArgumentError)
           lambda { echo.send(:handle_opts, :sort => "tempo-asc") }.should_not raise_error(ArgumentError)
         end
         it "should raise errors with bad options" do
-          lambda { echo.send(:handle_opts, :bucket => "bucket") }.should raise_error(ArgumentError)
+          lambda { echo.send(:handle_opts, :bucket => ["bucket"] ) }.should raise_error(ArgumentError)
           lambda { echo.send(:handle_opts, :sort => "sort") }.should raise_error(ArgumentError)
         end
       end
