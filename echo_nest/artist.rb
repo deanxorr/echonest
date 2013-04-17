@@ -214,7 +214,7 @@ module EchoNest
       #   artist_end_year_after    => earliest end year for results Values: ( 1970..2011 | present )
       #   results                  => return this many results. Values: 0..100
       #   start                    => start at the nth result. Values: 0..n
-      raise ArgumentError, "sort must be in #{VALID_SORTS}" unless ( opts[:sort] && !VALID_SORTS.include?(opts[:sort]) )
+      raise ArgumentError, "sort must be in #{VALID_SORTS}" if ( opts[:sort] && !VALID_SORTS.include?(opts[:sort]) )
       query = "/artist/search?"
       request(build_url(query, opts))['artists']
     end
